@@ -1,0 +1,6 @@
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    order_uid TEXT UNIQUE NOT NULL,
+    data JSONB NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
