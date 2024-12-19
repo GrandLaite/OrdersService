@@ -6,7 +6,7 @@ import (
 
 type Order struct {
 	OrderUID          string       `json:"order_uid"`
-	TrackNumber       string       `json:"track_number"`
+	TrackNumber       int          `json:"track_number"`
 	Entry             string       `json:"entry"`
 	Delivery          DeliveryInfo `json:"delivery"`
 	Payment           PaymentInfo  `json:"payment"`

@@ -50,7 +50,7 @@ func (c *Consumer) Start(ctx context.Context) {
 	for {
 		select {
 		case <-ctx.Done():
-			c.logger.Info("Consumer context canceled")
+			c.logger.Info("Отключаем consumer")
 			return
 		case <-c.stopChan:
 			c.logger.Info("Получен сигнал остановки для consumer")
@@ -107,7 +107,7 @@ const orderSchemaJSON = `
   "required": ["order_uid", "track_number", "entry", "delivery", "payment", "items", "locale", "customer_id", "delivery_service", "shardkey", "sm_id", "date_created", "oof_shard"],
   "properties": {
     "order_uid": {"type": "string"},
-    "track_number": {"type": "string"},
+    "track_number": {"type": "integer"},
     "entry": {"type": "string"},
     "delivery": {
       "type": "object",
