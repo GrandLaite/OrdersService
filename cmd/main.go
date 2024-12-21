@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -58,7 +59,7 @@ func main() {
 	if loadedCount, err := svc.RestoreCache(); err != nil {
 		zapLogger.Error("Не удалось загрузить данные из БД в кэш", zap.Error(err))
 	} else {
-		zapLogger.Info("Успешно загружены данные из БД в кэш", zap.Int("количество заказов", loadedCount))
+		zapLogger.Info("Данные из БД успешно загружены в кэш. Количество загруженных заказов: " + fmt.Sprintf("%d", loadedCount))
 	}
 
 	consumer, err := kafka.NewConsumer(cfg, svc, zapLogger)
@@ -67,6 +68,8 @@ func main() {
 	}
 	consumerCtx, consumerCancel := context.WithCancel(context.Background())
 	go consumer.Start(consumerCtx)
+
+	gin.SetMode(gin.ReleaseMode)
 
 	r := gin.Default()
 	handler.RegisterRoutes(r, svc, zapLogger)
@@ -77,7 +80,7 @@ func main() {
 	}
 
 	go func() {
-		zapLogger.Info("Запуск HTTP сервера", zap.String("адрес", httpServer.Addr))
+		zapLogger.Info("HTTP-сервер успешно запущен по адресу " + httpServer.Addr)
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			zapLogger.Fatal("Ошибка HTTP сервера", zap.Error(err))
 		}
