@@ -55,8 +55,10 @@ func main() {
 
 	svc := service.NewOrderService(repo, cacheStorage)
 
-	if err := svc.RestoreCache(); err != nil {
-		zapLogger.Error("Не удалось восстановить кэш", zap.Error(err))
+	if loadedCount, err := svc.RestoreCache(); err != nil {
+		zapLogger.Error("Не удалось загрузить данные из БД в кэш", zap.Error(err))
+	} else {
+		zapLogger.Info("Успешно загружены данные из БД в кэш", zap.Int("количество заказов", loadedCount))
 	}
 
 	consumer, err := kafka.NewConsumer(cfg, svc, zapLogger)

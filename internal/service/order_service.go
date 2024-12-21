@@ -21,18 +21,18 @@ func NewOrderService(repo *repository.OrderRepository, cache *cache.OrderCache) 
 	}
 }
 
-func (s *OrderService) RestoreCache() error {
+func (s *OrderService) RestoreCache() (int, error) {
 	ctx := context.Background()
 	orders, err := s.repo.GetAllOrders(ctx)
 	if err != nil {
-		return fmt.Errorf("не удалось восстановить кэш из БД: %w", err)
+		return 0, fmt.Errorf("не удалось восстановить кэш из БД: %w", err)
 	}
 
 	for _, o := range orders {
 		s.cache.Set(o)
 	}
 
-	return nil
+	return len(orders), nil
 }
 
 func (s *OrderService) GetOrder(ctx context.Context, orderUID string) (*domain.Order, error) {
