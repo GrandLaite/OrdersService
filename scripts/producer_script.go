@@ -15,7 +15,6 @@ import (
 )
 
 func main() {
-	// Загружаем конфигурацию из config.env
 	if err := godotenv.Load("config.env"); err != nil {
 		log.Println("Файл config.env не найден. Будут использованы значения по умолчанию.")
 	}
